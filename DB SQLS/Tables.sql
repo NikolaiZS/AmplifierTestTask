@@ -1,4 +1,4 @@
---Десктоп предполагает что база данных называется StockDB, но можно поменять в классе SqlRepository в поле ConnectionString, параметр Server
+--Десктоп предполагает что база данных называется StockDB, но можно поменять в классе SqlRepository в поле ConnectionString, параметр Database
 
 -- 1. Таблица товаров
 CREATE TABLE Products (
