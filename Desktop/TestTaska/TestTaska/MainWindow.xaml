@@ -1,0 +1,173 @@
+﻿<Window x:Class="TestTaska.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:TestTaska.ViewModels"
+        xmlns:local="clr-namespace:TestTaska"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d"
+        Title="Учет склада" Height="450" Width="1000">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <TabControl>
+
+        <TabItem Header="1. Наличие и Товары">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="10" Grid.Row="0">
+                    <TextBlock Text="Новый товар:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBox Text="{Binding NewProductName, UpdateSourceTrigger=PropertyChanged}" 
+                             Width="250" Margin="0,0,10,0"/>
+                    <Button Content="✅ Добавить Товар" Command="{Binding AddProductCommand}" Padding="5"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="1" 
+                          ItemsSource="{Binding StockList}" 
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True" 
+                          Margin="10">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding ProductId}" Width="50"/>
+                        <DataGridTextColumn Header="Наименование товара" Binding="{Binding ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Приход всего" Binding="{Binding TotalIn}"/>
+                        <DataGridTextColumn Header="Расход всего" Binding="{Binding TotalOut}"/>
+                        <DataGridTextColumn Header="ТЕКУЩИЙ ОСТАТОК" Binding="{Binding CurrentStock}" FontWeight="Bold"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="2. Приход (Журнал)">
+            <TabItem.DataContext>
+                <vm:ReceiptsViewModel/>
+            </TabItem.DataContext>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="10" Orientation="Horizontal">
+                    <TextBlock Text="Период: С" VerticalAlignment="Center" Margin="5"/>
+                    <DatePicker SelectedDate="{Binding FilterStartDate}" Width="120" Margin="5"/>
+                    <TextBlock Text="По" VerticalAlignment="Center" Margin="5"/>
+                    <DatePicker SelectedDate="{Binding FilterEndDate}" Width="120" Margin="5"/>
+
+                    <Button Content="🔍 Фильтровать" Command="{Binding FilterReceiptsCommand}" Padding="8" Margin="10,0,30,0"/>
+
+                    <Button Content="➕ Новая запись" Command="{Binding NewReceiptCommand}" Padding="8" Margin="0,0,10,0"/>
+                    <Button Content="✍️ Редактировать выбранную" Command="{Binding EditSelectedReceiptCommand}" Padding="8" Margin="0,0,10,0"/>
+                    <Button Content="❌ Удалить выбранную" Command="{Binding DeleteReceiptCommand}" Padding="8" Foreground="Red"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="1" 
+                          ItemsSource="{Binding ReceiptsList}" 
+                          SelectedItem="{Binding SelectedReceipt}"
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True" 
+                          Margin="10,0,10,10"
+                          HeadersVisibility="Column">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding ReceiptId}" Width="50"/>
+                        <DataGridTextColumn Header="Дата прихода" Binding="{Binding ReceiptDate, StringFormat='dd.MM.yyyy'}" Width="120"/>
+                        <DataGridTextColumn Header="Товар" Binding="{Binding Product.ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Количество" Binding="{Binding Quantity}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <GroupBox Grid.Row="2" Header="Редактирование записи" Margin="10" Padding="10">
+                    <StackPanel Orientation="Horizontal">
+
+                        <TextBlock Text="Товар:" VerticalAlignment="Center" Margin="5"/>
+                        <ComboBox ItemsSource="{Binding AvailableProducts}"
+                                  SelectedItem="{Binding SelectedProductForEdit}"
+                                  DisplayMemberPath="ProductName"
+                                  SelectedValuePath="ProductId"
+                                  Width="250" Margin="5"/>
+
+                        <TextBlock Text="Дата:" VerticalAlignment="Center" Margin="15,0,5,0"/>
+                        <DatePicker SelectedDate="{Binding EditingReceipt.ReceiptDate}" Width="120" Margin="5"/>
+
+                        <TextBlock Text="Количество:" VerticalAlignment="Center" Margin="15,0,5,0"/>
+                        <TextBox Text="{Binding EditingReceipt.Quantity, UpdateSourceTrigger=PropertyChanged}" 
+                                 Width="80" Margin="5"/>
+
+                        <Button Content="💾 Сохранить (Добавить/Обновить)" Command="{Binding SaveReceiptCommand}" Padding="10" Margin="30,0,0,0" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="3. Расход (Журнал)">
+            <TabItem.DataContext>
+                <vm:StockOutsViewModel/>
+            </TabItem.DataContext>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="10" Orientation="Horizontal">
+                    <TextBlock Text="Период: С" VerticalAlignment="Center" Margin="5"/>
+                    <DatePicker SelectedDate="{Binding FilterStartDate}" Width="120" Margin="5"/>
+                    <TextBlock Text="По" VerticalAlignment="Center" Margin="5"/>
+                    <DatePicker SelectedDate="{Binding FilterEndDate}" Width="120" Margin="5"/>
+
+                    <Button Content="🔍 Фильтровать" Command="{Binding FilterStockOutsCommand}" Padding="8" Margin="10,0,30,0"/>
+
+                    <Button Content="➕ Новая запись" Command="{Binding NewStockOutCommand}" Padding="8" Margin="0,0,10,0"/>
+                    <Button Content="✍️ Редактировать выбранную" Command="{Binding EditSelectedStockOutCommand}" Padding="8" Margin="0,0,10,0"/>
+                    <Button Content="❌ Удалить выбранную" Command="{Binding DeleteStockOutCommand}" Padding="8" Foreground="Red"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="1" 
+                          ItemsSource="{Binding StockOutsList}" 
+                          SelectedItem="{Binding SelectedStockOut}"
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True" 
+                          Margin="10,0,10,10"
+                          HeadersVisibility="Column">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding OutId}" Width="50"/>
+                        <DataGridTextColumn Header="Дата расхода" Binding="{Binding OutDate, StringFormat='dd.MM.yyyy'}" Width="120"/>
+                        <DataGridTextColumn Header="Товар" Binding="{Binding Product.ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Количество" Binding="{Binding Quantity}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <GroupBox Grid.Row="2" Header="Редактирование записи" Margin="10" Padding="10">
+                    <StackPanel Orientation="Horizontal">
+
+                        <TextBlock Text="Товар:" VerticalAlignment="Center" Margin="5"/>
+                        <ComboBox ItemsSource="{Binding AvailableProducts}"
+                                  SelectedItem="{Binding SelectedProductForEdit}"
+                                  DisplayMemberPath="ProductName"
+                                  SelectedValuePath="ProductId"
+                                  Width="250" Margin="5"/>
+
+                        <TextBlock Text="Дата:" VerticalAlignment="Center" Margin="15,0,5,0"/>
+                        <DatePicker SelectedDate="{Binding EditingStockOut.OutDate}" Width="120" Margin="5"/>
+
+                        <TextBlock Text="Количество:" VerticalAlignment="Center" Margin="15,0,5,0"/>
+                        <TextBox Text="{Binding EditingStockOut.Quantity, UpdateSourceTrigger=PropertyChanged}" 
+                                 Width="80" Margin="5"/>
+
+                        <Button Content="💾 Сохранить (Добавить/Обновить)" Command="{Binding SaveStockOutCommand}" Padding="10" Margin="30,0,0,0" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>

@@ -1,0 +1,231 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\data\\sqlrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\data\\sqlrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\viewmodels\\receiptsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\viewmodels\\receiptsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\viewmodels\\stockoutsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\viewmodels\\stockoutsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\models\\stockreceipt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\models\\stockreceipt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\models\\stockout.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\models\\stockout.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\models\\productstockdisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\models\\productstockdisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|c:\\users\\fear\\desktop\\testtaskamplifier\\desktop\\testtaska\\testtaska\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F212AC8-7C4A-468A-9321-C19B11B7ED7B}|TestTaska\\TestTaska.csproj|solutionrelative:testtaska\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "TestTaska\\AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\AssemblyInfo.cs",
+              "RelativeToolTip": "TestTaska\\AssemblyInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T13:14:58.833Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\App.xaml.cs",
+              "RelativeDocumentMoniker": "TestTaska\\App.xaml.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\App.xaml.cs",
+              "RelativeToolTip": "TestTaska\\App.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T13:14:54.113Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\App.xaml",
+              "RelativeDocumentMoniker": "TestTaska\\App.xaml",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\App.xaml",
+              "RelativeToolTip": "TestTaska\\App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-12-02T13:14:50.924Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\ViewModels\\MainViewModel.cs",
+              "RelativeDocumentMoniker": "TestTaska\\ViewModels\\MainViewModel.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\ViewModels\\MainViewModel.cs",
+              "RelativeToolTip": "TestTaska\\ViewModels\\MainViewModel.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAvwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:27:43.898Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ReceiptsViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\ViewModels\\ReceiptsViewModel.cs",
+              "RelativeDocumentMoniker": "TestTaska\\ViewModels\\ReceiptsViewModel.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\ViewModels\\ReceiptsViewModel.cs",
+              "RelativeToolTip": "TestTaska\\ViewModels\\ReceiptsViewModel.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAawIEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:50:31.787Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SqlRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Data\\SqlRepository.cs",
+              "RelativeDocumentMoniker": "TestTaska\\Data\\SqlRepository.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Data\\SqlRepository.cs",
+              "RelativeToolTip": "TestTaska\\Data\\SqlRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:21:49.748Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ProductStockDisplay.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Models\\ProductStockDisplay.cs",
+              "RelativeDocumentMoniker": "TestTaska\\Models\\ProductStockDisplay.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Models\\ProductStockDisplay.cs",
+              "RelativeToolTip": "TestTaska\\Models\\ProductStockDisplay.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:18:49.844Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "TestTaska\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\MainWindow.xaml",
+              "RelativeToolTip": "TestTaska\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-12-02T10:08:08.1Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "TestTaska\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\MainWindow.xaml.cs",
+              "RelativeToolTip": "TestTaska\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAAA8AAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:08:04.265Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "StockOutsViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\ViewModels\\StockOutsViewModel.cs",
+              "RelativeDocumentMoniker": "TestTaska\\ViewModels\\StockOutsViewModel.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\ViewModels\\StockOutsViewModel.cs",
+              "RelativeToolTip": "TestTaska\\ViewModels\\StockOutsViewModel.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAiwDEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:54:29.554Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "StockReceipt.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Models\\StockReceipt.cs",
+              "RelativeDocumentMoniker": "TestTaska\\Models\\StockReceipt.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Models\\StockReceipt.cs",
+              "RelativeToolTip": "TestTaska\\Models\\StockReceipt.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:13:18.835Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "StockOut.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Models\\StockOut.cs",
+              "RelativeDocumentMoniker": "TestTaska\\Models\\StockOut.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Models\\StockOut.cs",
+              "RelativeToolTip": "TestTaska\\Models\\StockOut.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:15:05.017Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "TestTaska\\Models\\Product.cs",
+              "ToolTip": "C:\\Users\\Fear\\Desktop\\TestTaskAmplifier\\Desktop\\TestTaska\\TestTaska\\Models\\Product.cs",
+              "RelativeToolTip": "TestTaska\\Models\\Product.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T10:10:05.476Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
