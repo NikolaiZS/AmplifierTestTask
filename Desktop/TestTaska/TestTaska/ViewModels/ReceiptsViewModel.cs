@@ -2,16 +2,15 @@
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using TestTaska.Data;
 using TestTaska.Models;
 
-
 namespace TestTaska.ViewModels
 {
-    public partial class ReceiptsViewModel : ObservableObject, IDisposable
+    public partial class ReceiptsViewModel : ViewModelBase
     {
         private readonly SqlRepository _repository;
 
@@ -22,62 +21,88 @@ namespace TestTaska.ViewModels
         private DateTime _filterEndDate = DateTime.Now.Date;
 
         [ObservableProperty]
-        private ObservableCollection<StockReceipt> _receiptsList;
+        private ObservableCollection<StockReceipt> _receiptsList = new();
 
         [ObservableProperty]
-        private StockReceipt _selectedReceipt;
+        private StockReceipt? _selectedReceipt;
 
         [ObservableProperty]
-        private ObservableCollection<Product> _availableProducts;
+        private ObservableCollection<Product> _availableProducts = new();
 
         [ObservableProperty]
-        private StockReceipt _editingReceipt = new StockReceipt() { ReceiptDate = DateTime.Now.Date };
+        private StockReceipt _editingReceipt = new() { ReceiptDate = DateTime.Now.Date, Quantity = 1 };
 
         [ObservableProperty]
-        private Product _selectedProductForEdit;
+        private Product? _selectedProductForEdit;
 
-        public ReceiptsViewModel()
+        [ObservableProperty]
+        private bool _isBusy;
+
+        private bool CanExecuteAction() => !IsBusy;
+
+        public ReceiptsViewModel(SqlRepository repository) : base()
         {
-            _repository = new SqlRepository();
+            _repository = repository;
 
             SqlRepository.ProductsUpdated -= OnProductsListChanged;
             SqlRepository.ProductsUpdated += OnProductsListChanged;
+
             LoadInitialData();
         }
 
         private void OnProductsListChanged()
         {
-            LoadProductsForComboBox();
+            _ = LoadProductsForComboBox();
         }
 
-        private void LoadProductsForComboBox()
+        private async void LoadInitialData()
         {
-            AvailableProducts = new ObservableCollection<Product>(_repository.GetAllProducts());
+            await LoadProductsForComboBox();
+            await FilterReceipts();
         }
 
-        private void LoadInitialData()
+        private async Task LoadProductsForComboBox()
         {
-            LoadProductsForComboBox();
-            FilterReceipts();
-        }
+            var result = await _repository.GetAllProductsAsync();
 
-        public void Dispose()
-        {
-            SqlRepository.ProductsUpdated -= OnProductsListChanged;
+            if (result.IsSuccess && result.Data != null)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    AvailableProducts = new ObservableCollection<Product>(result.Data);
+                });
+            }
+            else
+            {
+                await ShowErrorMessage($"Ошибка при загрузке товаров: {result.ErrorMessage}");
+            }
         }
 
         [RelayCommand]
-        public void FilterReceipts()
+        public async Task FilterReceipts()
         {
-            try
+            if (IsBusy) return;
+            IsBusy = true;
+
+            var result = await _repository.GetFilteredReceiptsAsync(FilterStartDate, FilterEndDate);
+
+            if (result.IsSuccess && result.Data != null)
             {
-                var filtered = _repository.GetFilteredReceipts(FilterStartDate, FilterEndDate);
-                ReceiptsList = new ObservableCollection<StockReceipt>(filtered);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ReceiptsList.Clear();
+                    foreach (var receipt in result.Data)
+                    {
+                        ReceiptsList.Add(receipt);
+                    }
+                });
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Ошибка фильтрации данных: {ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
+                await ShowErrorMessage($"Ошибка при загрузке приходов: {result.ErrorMessage}");
             }
+
+            IsBusy = false;
         }
 
         [RelayCommand]
@@ -109,7 +134,7 @@ namespace TestTaska.ViewModels
         }
 
         [RelayCommand]
-        public void SaveReceipt()
+        public async Task SaveReceipt()
         {
             if (SelectedProductForEdit == null || EditingReceipt.Quantity <= 0)
             {
@@ -117,53 +142,106 @@ namespace TestTaska.ViewModels
                 return;
             }
 
+            IsBusy = true;
             EditingReceipt.ProductId = SelectedProductForEdit.ProductId;
 
-            try
+            OperationResult result;
+            if (EditingReceipt.ReceiptId == 0)
             {
-                if (EditingReceipt.ReceiptId == 0)
-                {
-                    _repository.AddReceipt(EditingReceipt);
-                }
-                else
-                {
-                    _repository.UpdateReceipt(EditingReceipt);
-                }
+                result = await _repository.AddReceiptAsync(EditingReceipt);
+            }
+            else
+            {
+                result = await _repository.UpdateReceiptAsync(EditingReceipt);
+            }
 
-                FilterReceipts();
+            if (result.IsSuccess)
+            {
+                await FilterReceipts();
                 NewReceipt();
                 MessageBox.Show("Запись успешно сохранена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
+                await ShowErrorMessage($"Ошибка сохранения: {result.ErrorMessage}");
             }
+
+            IsBusy = false;
         }
 
-        [RelayCommand]
-        public void DeleteReceipt()
+        [RelayCommand(CanExecute = nameof(CanExecuteAction))]
+        public Task DeleteReceipt()
         {
-            if (SelectedReceipt == null)
+            return Task.Run(async () =>
             {
-                MessageBox.Show("Выберите запись для удаления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                if (SelectedReceipt == null)
+                {
+                    await Task.Run(() => MessageBox.Show("Выберите запись для удаления."));
+                    return;
+                }
 
-            var result = MessageBox.Show("Вы уверены, что хотите удалить эту запись?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                Application.Current.Dispatcher.Invoke(() => IsBusy = true);
 
-            if (result == MessageBoxResult.Yes)
-            {
                 try
                 {
-                    _repository.DeleteReceipt(SelectedReceipt.ReceiptId);
-                    FilterReceipts();
-                    MessageBox.Show("Запись удалена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    int currentStock = await _repository.GetProductStockCountAsync(SelectedReceipt.ProductId);
+
+                    if (currentStock - SelectedReceipt.Quantity < 0)
+                    {
+                        await Task.Run(() => MessageBox.Show(
+                            $"Невозможно удалить приход!{Environment.NewLine}{Environment.NewLine}" +
+                            $"Этот товар уже частично или полностью списан (продан).{Environment.NewLine}" +
+                            $"Текущий остаток: {currentStock}{Environment.NewLine}" +
+                            $"В этом приходе: {SelectedReceipt.Quantity}{Environment.NewLine}{Environment.NewLine}" +
+                            $"Сначала удалите расходы, связанные с этим товаром.",
+                            "Ошибка целостности склада", MessageBoxButton.OK, MessageBoxImage.Stop));
+                        return;
+                    }
+
+                    var confirm = MessageBoxResult.No;
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        confirm = MessageBox.Show("Вы уверены, что хотите удалить запись о приходе?",
+                            "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    });
+
+                    if (confirm == MessageBoxResult.Yes)
+                    {
+                        var result = await _repository.DeleteReceiptAsync(SelectedReceipt.ReceiptId);
+
+                        if (result.IsSuccess)
+                        {
+                            await FilterReceipts();
+                            await Task.Run(() => MessageBox.Show("Запись удалена."));
+                        }
+                        else
+                        {
+                            await Task.Run(() => MessageBox.Show(result.ErrorMessage));
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка удаления: {ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
+                    await Task.Run(() => MessageBox.Show($"Ошибка: {ex.Message}"));
                 }
-            }
+                finally
+                {
+                    Application.Current.Dispatcher.Invoke(() => IsBusy = false);
+                }
+            });
+        }
+
+        private async Task ShowErrorMessage(string message)
+        {
+            await Task.Run(() =>
+                MessageBox.Show(message, "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error)
+            );
+        }
+
+        public void Dispose()
+        {
+            SqlRepository.ProductsUpdated -= OnProductsListChanged;
+            base.Dispose();
         }
     }
 }

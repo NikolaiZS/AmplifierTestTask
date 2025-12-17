@@ -2,16 +2,15 @@
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using TestTaska.Data;
 using TestTaska.Models;
 
-
 namespace TestTaska.ViewModels
 {
-    public partial class StockOutsViewModel : ObservableObject, IDisposable
+    public partial class StockOutsViewModel : ViewModelBase
     {
         private readonly SqlRepository _repository;
 
@@ -22,62 +21,85 @@ namespace TestTaska.ViewModels
         private DateTime _filterEndDate = DateTime.Now.Date;
 
         [ObservableProperty]
-        private ObservableCollection<StockOut> _stockOutsList;
+        private ObservableCollection<StockOut> _stockOutsList = new();
 
         [ObservableProperty]
-        private StockOut _selectedStockOut; 
+        private StockOut? _selectedStockOut;
 
         [ObservableProperty]
-        private ObservableCollection<Product> _availableProducts; 
+        private ObservableCollection<Product> _availableProducts = new();
 
         [ObservableProperty]
-        private StockOut _editingStockOut = new StockOut() { OutDate = DateTime.Now.Date }; 
+        private StockOut _editingStockOut = new() { OutDate = DateTime.Now.Date, Quantity = 1 };
 
         [ObservableProperty]
-        private Product _selectedProductForEdit; 
+        private Product? _selectedProductForEdit;
 
-        public StockOutsViewModel()
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveStockOutCommand))]
+        [NotifyCanExecuteChangedFor(nameof(DeleteStockOutCommand))]
+        private bool _isBusy;
+
+        private bool CanExecuteAction() => !IsBusy;
+
+        public StockOutsViewModel(SqlRepository repository) : base()
         {
-            _repository = new SqlRepository();
-            LoadInitialData();
+            _repository = repository;
 
             SqlRepository.ProductsUpdated -= OnProductsListChanged;
             SqlRepository.ProductsUpdated += OnProductsListChanged;
+
+            _ = LoadInitialData();
         }
 
         private void OnProductsListChanged()
         {
-            LoadProductsForComboBox();
+            _ = LoadProductsForComboBox();
         }
 
-        private void LoadProductsForComboBox()
+        private async Task LoadInitialData()
         {
-            AvailableProducts = new ObservableCollection<Product>(_repository.GetAllProducts());
-        }
-        public void Dispose()
-        {
-            SqlRepository.ProductsUpdated -= OnProductsListChanged;
+            await LoadProductsForComboBox();
+            await FilterStockOuts();
         }
 
-        private void LoadInitialData()
+        private async Task LoadProductsForComboBox()
         {
-            LoadProductsForComboBox();
+            var result = await _repository.GetAllProductsAsync();
 
-            FilterStockOuts();
+            if (result.IsSuccess && result.Data != null)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    AvailableProducts = new ObservableCollection<Product>(result.Data);
+                });
+            }
+            else
+            {
+                await ShowErrorMessage($"Ошибка при загрузке товаров: {result.ErrorMessage}");
+            }
         }
 
         [RelayCommand]
-        public void FilterStockOuts()
+        public async Task FilterStockOuts()
         {
-            try
+            if (IsBusy) return;
+            IsBusy = true;
+
+            var result = await Task.Run(() => _repository.GetFilteredStockOutsAsync(FilterStartDate, FilterEndDate));
+
+            if (result.IsSuccess && result.Data != null)
             {
-                var filtered = _repository.GetFilteredStockOuts(FilterStartDate, FilterEndDate);
-                StockOutsList = new ObservableCollection<StockOut>(filtered);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    StockOutsList.Clear();
+                    foreach (var stockOut in result.Data)
+                    {
+                        StockOutsList.Add(stockOut);
+                    }
+                });
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка фильтрации данных: {ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            IsBusy = false;
         }
 
         [RelayCommand]
@@ -108,62 +130,125 @@ namespace TestTaska.ViewModels
             SelectedProductForEdit = AvailableProducts.FirstOrDefault(p => p.ProductId == SelectedStockOut.ProductId);
         }
 
-        [RelayCommand]
-        public void SaveStockOut()
+        [RelayCommand(CanExecute = nameof(CanExecuteAction))]
+        public Task SaveStockOut()
         {
-            if (SelectedProductForEdit == null || EditingStockOut.Quantity <= 0)
+            return Task.Run(async () =>
             {
-                MessageBox.Show("Пожалуйста, выберите товар и введите корректное количество (> 0).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            EditingStockOut.ProductId = SelectedProductForEdit.ProductId;
-
-            try
-            {
-                if (EditingStockOut.OutId == 0)
+                if (SelectedProductForEdit == null || EditingStockOut.Quantity <= 0)
                 {
-                    _repository.AddStockOut(EditingStockOut);
-                }
-                else
-                {
-                    _repository.UpdateStockOut(EditingStockOut);
+                    await Task.Run(() => MessageBox.Show("Укажите товар и количество."));
+                    return;
                 }
 
-                FilterStockOuts();
-                NewStockOut();
-                MessageBox.Show("Запись расхода успешно сохранена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка сохранения расхода: {ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+                Application.Current.Dispatcher.Invoke(() => IsBusy = true);
 
-        [RelayCommand]
-        public void DeleteStockOut()
-        {
-            if (SelectedStockOut == null)
-            {
-                MessageBox.Show("Выберите запись для удаления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            var result = MessageBox.Show("Вы уверены, что хотите удалить эту запись расхода?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
                 try
                 {
-                    _repository.DeleteStockOut(SelectedStockOut.OutId);
-                    FilterStockOuts();
-                    MessageBox.Show("Запись расхода удалена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    int stockInDb = await _repository.GetProductStockCountAsync(SelectedProductForEdit.ProductId);
+
+                    int finalAvailableStock = stockInDb;
+
+                    if (EditingStockOut.OutId != 0)
+                    {
+                        var originalRecord = StockOutsList.FirstOrDefault(x => x.OutId == EditingStockOut.OutId);
+                        if (originalRecord != null)
+                        {
+                            finalAvailableStock += originalRecord.Quantity;
+                        }
+                    }
+
+                    if (EditingStockOut.Quantity > finalAvailableStock)
+                    {
+                        await Task.Run(() => MessageBox.Show(
+                            $"Недостаточно товара!{Environment.NewLine}" +
+                            $"На складе фактически: {stockInDb}{Environment.NewLine}" +
+                            $"Доступно для этой операции: {finalAvailableStock}{Environment.NewLine}" +
+                            $"Вы пытаетесь списать: {EditingStockOut.Quantity}",
+                            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning));
+                        return;
+                    }
+
+                    EditingStockOut.ProductId = SelectedProductForEdit.ProductId;
+
+                    var result = EditingStockOut.OutId == 0
+                        ? await _repository.AddStockOutAsync(EditingStockOut)
+                        : await _repository.UpdateStockOutAsync(EditingStockOut);
+
+                    if (result.IsSuccess)
+                    {
+                        await FilterStockOuts();
+                        Application.Current.Dispatcher.Invoke(() => NewStockOut());
+                        await Task.Run(() => MessageBox.Show("Готово!"));
+                    }
                 }
-                catch (Exception ex)
+                finally
                 {
-                    MessageBox.Show($"Ошибка удаления расхода: {ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Application.Current.Dispatcher.Invoke(() => IsBusy = false);
                 }
-            }
+            });
+        }
+
+        [RelayCommand(CanExecute = nameof(CanExecuteAction))]
+        public Task DeleteStockOut()
+        {
+            return Task.Run(async () =>
+            {
+                if (SelectedStockOut == null)
+                {
+                    await Task.Run(() => MessageBox.Show("Выберите запись для удаления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning));
+                    return;
+                }
+
+                var confirm = MessageBoxResult.No;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    confirm = MessageBox.Show("Вы уверены, что хотите удалить эту запись расхода?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                });
+
+                if (confirm == MessageBoxResult.Yes)
+                {
+                    Application.Current.Dispatcher.Invoke(() => IsBusy = true);
+
+                    try
+                    {
+                        var result = await _repository.DeleteStockOutAsync(SelectedStockOut.OutId);
+
+                        if (result.IsSuccess)
+                        {
+                            await FilterStockOuts();
+
+                            await Task.Run(() => MessageBox.Show("Запись расхода удалена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information));
+                        }
+                        else
+                        {
+                            await ShowErrorMessage($"Ошибка удаления: {result.ErrorMessage}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await ShowErrorMessage($"Критическая ошибка при удалении: {ex.Message}");
+                    }
+                    finally
+                    {
+                        Application.Current.Dispatcher.Invoke(() => IsBusy = false);
+                    }
+                }
+            });
+        }
+
+
+        private async Task ShowErrorMessage(string message)
+        {
+            await Task.Run(() =>
+                MessageBox.Show(message, "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error)
+            );
+        }
+
+        public void Dispose()
+        {
+            SqlRepository.ProductsUpdated -= OnProductsListChanged;
+            base.Dispose();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestTaska.ViewModels;
 
 namespace TestTaska
 {
@@ -21,28 +23,13 @@ namespace TestTaska
             InitializeComponent();
         }
 
-        protected override void OnClosed(EventArgs e)
+        public MainWindow(MainViewModel mainViewModel, IServiceProvider serviceProvider) : this()
         {
-            base.OnClosed(e);
 
-            if (this.DataContext is IDisposable mainVm)
-            {
-                mainVm.Dispose();
-            }
+            this.DataContext = mainViewModel;
 
-            if (FindName("ReceiptsTab") is TabItem receiptsTab
-                && receiptsTab.DataContext is IDisposable receiptsVm)
-            {
-                receiptsVm.Dispose();
-            }
-
-            if (FindName("StockOutsTab") is TabItem stockOutsTab
-                && stockOutsTab.DataContext is IDisposable stockOutsVm)
-            {
-                stockOutsVm.Dispose();
-            }
-
-            Application.Current.Shutdown();
+            ReceiptsTab.DataContext = serviceProvider.GetRequiredService<ReceiptsViewModel>();
+            StockOutsTab.DataContext = serviceProvider.GetRequiredService<StockOutsViewModel>();
         }
     }
 }

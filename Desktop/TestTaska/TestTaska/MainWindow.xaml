@@ -7,10 +7,7 @@
         xmlns:local="clr-namespace:TestTaska"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Учет склада" Height="450" Width="1000">
-    <Window.DataContext>
-        <vm:MainViewModel/>
-    </Window.DataContext>
+        Title="Учет склада" Height="450" Width="1010">
 
     <TabControl>
 
@@ -25,7 +22,7 @@
                     <TextBlock Text="Новый товар:" VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <TextBox Text="{Binding NewProductName, UpdateSourceTrigger=PropertyChanged}" 
                              Width="250" Margin="0,0,10,0"/>
-                    <Button Content="✅ Добавить Товар" Command="{Binding AddProductCommand}" Padding="5"/>
+                    <Button Content="✅ Добавить Товар" Command="{Binding AddProductExecuteCommand}" Padding="5"/>
                 </StackPanel>
 
                 <DataGrid Grid.Row="1" 
@@ -44,10 +41,7 @@
             </Grid>
         </TabItem>
 
-        <TabItem Header="2. Приход (Журнал)">
-            <TabItem.DataContext>
-                <vm:ReceiptsViewModel/>
-            </TabItem.DataContext>
+        <TabItem Header="2. Приход (Журнал)" x:Name="ReceiptsTab">
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -107,10 +101,7 @@
             </Grid>
         </TabItem>
 
-        <TabItem Header="3. Расход (Журнал)">
-            <TabItem.DataContext>
-                <vm:StockOutsViewModel/>
-            </TabItem.DataContext>
+        <TabItem Header="3. Расход (Журнал)" x:Name="StockOutsTab">
 
             <Grid>
                 <Grid.RowDefinitions>

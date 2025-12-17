@@ -1,21 +1,22 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TestTaska.Data;
 using TestTaska.Models;
+using System.Linq;
 
 namespace TestTaska.ViewModels
 {
-    public partial class MainViewModel: ObservableObject, IDisposable
+    public partial class MainViewModel : ViewModelBase
     {
         private readonly SqlRepository _repository;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(AddProductExecuteCommand))]
+        private bool _isBusy;
 
         [ObservableProperty]
         private ObservableCollection<ProductStockDisplay> _stockList = new ObservableCollection<ProductStockDisplay>();
@@ -23,63 +24,119 @@ namespace TestTaska.ViewModels
         [ObservableProperty]
         private string _newProductName = string.Empty;
 
-        public MainViewModel()
+        private bool CanAddProductExecute() => !IsBusy;
+
+        public MainViewModel(SqlRepository repository) : base()
         {
-            _repository = new SqlRepository();
-            LoadData();
+            _repository = repository;
 
             SqlRepository.StockMovementUpdated -= OnStockMovementChanged;
             SqlRepository.StockMovementUpdated += OnStockMovementChanged;
+
+            SqlRepository.ProductsUpdated += async () =>
+            {
+                await LoadDataAsync();
+            };
+
+            _ = LoadDataAsync();
         }
 
         private void OnStockMovementChanged()
         {
-            LoadData();
+            _ = LoadDataAsync();
         }
 
         public void Dispose()
         {
             SqlRepository.StockMovementUpdated -= OnStockMovementChanged;
+            base.Dispose();
         }
 
-        private void LoadData()
+
+        private async Task LoadDataAsync()
         {
-            var stocks = _repository.GetCurrentStock();
-            StockList.Clear();
-            foreach (var stockItem in stocks)
+            var result = await _repository.GetCurrentStockAsync();
+
+            if (result.IsSuccess && result.Data != null)
             {
-                StockList.Add(stockItem);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    StockList.Clear();
+                    foreach (var item in result.Data)
+                    {
+                        StockList.Add(item);
+                    }
+                });
+            }
+            else
+            {
+                await Task.Run(() =>
+                    MessageBox.Show($"Ошибка загрузки: {result.ErrorMessage}", "Ошибка БД",
+                        MessageBoxButton.OK, MessageBoxImage.Error)
+                );
             }
         }
 
-        [RelayCommand]
-        private void AddProduct()
+        //[AsyncRelayCommand(CanExecute = nameof(CanAddProductExecute))] кодген Toolkit отказывается генерировать инструкции для AsyncRelayCommand(WIP)
+        [RelayCommand(CanExecute = nameof(CanAddProductExecute))]
+        private Task AddProductExecuteAsync()
         {
-            if (string.IsNullOrWhiteSpace(NewProductName))
+            return Task.Run(async () =>
             {
-                MessageBox.Show("Наименование товара не может быть пустым.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                string nameToValidate = string.Empty;
+                Application.Current.Dispatcher.Invoke(() => nameToValidate = NewProductName?.Trim());
 
-            if (_repository.CheckDuplicateProduct(NewProductName))
-            {
-                MessageBox.Show($"Товар с наименованием '{NewProductName}' уже существует!", "Дублирование товара", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+                if (string.IsNullOrWhiteSpace(nameToValidate))
+                {
+                    await Task.Run(() => MessageBox.Show("Наименование товара не может быть пустым.", "Внимание"));
+                    return;
+                }
 
-            try
-            {
-                _repository.AddProduct(NewProductName);
+                Application.Current.Dispatcher.Invoke(() => IsBusy = true);
 
-                NewProductName = string.Empty;
-                LoadData();
+                try
+                {
+                    bool isDuplicate = await _repository.CheckDuplicateProductAsync(nameToValidate);
 
-                MessageBox.Show("Товар успешно добавлен.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при добавлении товара: {ex.Message}", "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                    if (isDuplicate)
+                    {
+                        await Task.Run(() =>
+                            MessageBox.Show($"Товар с именем '{nameToValidate}' уже существует!",
+                            "Дубликат", MessageBoxButton.OK, MessageBoxImage.Warning));
+
+                        return;
+                    }
+
+                    var addResult = await _repository.AddProductAsync(nameToValidate);
+
+                    if (addResult.IsSuccess)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => NewProductName = string.Empty);
+
+                        var stockResult = await _repository.GetCurrentStockAsync();
+                        if (stockResult.IsSuccess && stockResult.Data != null)
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                StockList.Clear();
+                                foreach (var item in stockResult.Data) StockList.Add(item);
+                            });
+                        }
+                    }
+                    else
+                    {
+                        await Task.Run(() => MessageBox.Show(addResult.ErrorMessage, "Ошибка"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await Task.Run(() => MessageBox.Show($"Критическая ошибка: {ex.Message}"));
+                }
+                finally
+                {
+                    Application.Current.Dispatcher.Invoke(() => IsBusy = false);
+                }
+            });
         }
     }
 }
